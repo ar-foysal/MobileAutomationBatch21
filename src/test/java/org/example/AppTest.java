@@ -1,7 +1,10 @@
 package org.example;
 
+import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.touch.offset.PointOption;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -37,9 +40,10 @@ public class AppTest {
     }
 
     @Test
-    public void testGeneralStoreAPK(){
+    public void testGeneralStoreAPK() throws InterruptedException {
         driver.findElement(By.id("com.androidsample.generalstore:id/spinnerCountry")).click();
-        driver.findElement(By.xpath("//*[@text='American Samoa']")).click();
+        driver.findElement(AppiumBy.androidUIAutomator("new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().text(\"Belarus\"))"));
+        driver.findElement(By.xpath("//*[@text='Belarus']")).click();
         driver.findElement(By.id("com.androidsample.generalstore:id/nameField")).sendKeys("hello %233");
         driver.findElement(By.id("com.androidsample.generalstore:id/radioFemale")).click();
         driver.findElement(By.id("com.androidsample.generalstore:id/btnLetsShop")).click();
@@ -48,14 +52,15 @@ public class AppTest {
         String countText = driver.findElement(By.id("com.androidsample.generalstore:id/counterText")).getText();
         Assert.assertEquals(countText, "1");
 
+        TouchAction touchAction = new TouchAction(driver);
+        touchAction.press(PointOption.point(531, 1071)).moveTo(PointOption.point(570, 670)).release().perform();
         driver.findElement(By.id("com.androidsample.generalstore:id/appbar_btn_cart")).click();
-
         WebElement checkbox = driver.findElement(By.xpath("//*[@text='Send me e-mails on discounts related to selected products in future']"));
         checkbox.click();
     }
 
     @AfterTest
     public void closeApp(){
-        driver.removeApp("com.androidsample.generalstore");
+//        driver.removeApp("com.androidsample.generalstore");
     }
 }
